@@ -73,7 +73,7 @@ class Row {
 	<li>
 		<details>
 			<summary>Вопрос 4</summary>
-			Допустим есть REST endpoint, который позволяет, который позволяет по ключу получить строку из таблицы:<br>
+			Допустим есть REST endpoint, который позволяет по ключу получить строку из таблицы:<br>
 		   <code>GET :8080/row/{pk}</code><br><br>
            И REST endpoint, который позволяет добавлять строку в таблицу<br>
            <code>POST :8080/row --data ...</code><br><br>
