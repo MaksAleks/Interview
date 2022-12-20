@@ -86,3 +86,161 @@ class Row {
 
 
 # Второе интервью
+
+### Вопрос 1
+Дан массив целых чисел.  
+Нужно реализовать процедуру shuffle, которая перемешивает массив.
+```java
+public void shuffle(int[] array) {
+	// TODO
+}
+
+```
+- Причем процедура должна перемещать каждый элемент на любое место в массиве с равной вероятностью.
+- Алгоритм должен работать in-place, то есть пространственная сложность O(1)
+- Алгоритм должен работать за время O(n)
+
+Докажите, что соблюдается условие равновероятности перемещения каждого элемента на любое место.
+
+### Вопрос 2
+
+Расскажите, зачем нужны volatile, какие гарантии позволяют получить volatile перменные.
+
+Объясние, что происходит в этом примере:
+```java
+volatile bolean ready = false;
+Map<Integer, String> map = new HashMap<>();
+
+// Thread 1
+while (!ready) {
+	// backoff
+}
+
+map.get(1);
+map.get(2);
+
+// Thread 2
+map.set(1, "one");
+map.set(2, "two");
+ready = true;
+```
+
+- Зачем тут нужна volatile переменная?
+- Что может произойти, если убрать модификатор volatile?
+
+### Вопрос 3: Про механизмы блокировок в java
+
+- Что такое ReentrantLock? Почему он называется Reentrant?
+ <ul>
+	<li>
+		<details>
+			<summary>Вопрос 1</summary>
+			Является ли блокировка, которая берется с блоке synchronized reentrant блокировкой? 
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>Вопрос 2</summary>
+ 			 Зачем придумали ReentrantLock, если есть synchronized блоки?
+		</details>
+	</li>
+</ul>
+
+Посмотрите на следующий блок кода.  
+Функция `Counter#increment()` может вызываться из нескольких потоков одновременно.
+
+Оцените значение, которое вернет `Counter#get()` в конце.  
+Объясните такой результат.
+
+```java
+class Counter {
+    private int counter;
+
+    public void increment() {
+        counter++;
+    }
+
+    public int get() {
+        return counter;
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) throws InterruptedException {
+        var latch = new CountDownLatch(1_000_000);
+        var tp = new ForkJoinPool();
+        var counter = new Counter();
+
+        for (int i = 0; i < 1_000_000; i++) {
+            tp.submit(() -> {
+                counter.inc();
+                latch.countDown();
+            });
+        }
+
+        latch.await();
+        System.out.println(counter.get());
+
+        tp.shutdownNow();
+    }
+}
+```
+<ul>
+	<li>
+		<details>
+			<summary>Вопрос 1</summary>
+			Как исправить проблему
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>Вопрос 2</summary>
+			Как устроен AtomicInteger
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>Вопрос 3</summary>
+			Можно ли реализовать CompareAndSwap в java?
+		</details>
+	</li>
+</ul>
+
+Какие примитивы синхронизации вы знаете?
+
+<ul>
+	<li>
+		<details>
+			<summary>Вопрос 1</summary>
+			Расскажите, для чего нужен семафор?  
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>Вопрос 2</summary>
+ 			Семафор используется для того, чтобы ограничить кол-во потоков, которые одновременно могут находиться в критическое секции.<br>
+			У семафора есть два метода: `aquire()` и `release()`;<br>
+			Представьте, что какой-то из потоков, которые используют семафор, вызовет `release()` без `aquire()`. Нарушит ли это гарантию, которую дает семафор? 
+		</details>
+	</li>
+</ul>
+
+### Вопрос 4
+
+Представьте что вы смотрите на рельеф в профиль:
+![without-water](./pics/without-water.png)
+
+Этот рельеф описывается массивом высот: [4, 1, 2, 3, 2, 3, 3, 2, 1]  
+Высота первого элемент - 4, второго - 2, и так далее.
+
+Представьте, что пошел дождь, и все ямы заполнились водой.
+
+![with-water](./pics/with-water.png)
+
+Нужно написать алгоритм, который принимает на вход массив высот,  
+и вычисляет сколько воды будет в ямах после дождя.  
+Вода заполняет только ямы! Если ямы нет, то вода просто стегает с поверхности.  
+
+
+
